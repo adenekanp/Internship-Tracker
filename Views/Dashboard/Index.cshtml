@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Welcome to Your Dashboard</h1>
+
+@if (ViewBag.UpcomingReminders != null && ViewBag.UpcomingReminders.Count > 0)
+{
+    <h4>Upcoming Deadlines (Next 2 Days)</h4>
+    <ul class="list-group">
+        @foreach (var app in ViewBag.UpcomingReminders)
+        {
+            <li class="list-group-item">
+                <strong>@app.Internship.Company</strong> -
+                <em>@app.Internship.Position</em> |
+                Reminder: <span class="text-danger">@app.ReminderDate?.ToShortDateString()</span>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No upcoming reminders. You're all caught up!</p>
+}

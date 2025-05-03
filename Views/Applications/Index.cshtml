@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Internship_Tracker.Models.Application>
+
+@{
+    ViewData["Title"] = "Applications";
+}
+
+<h1>My Applications</h1>
+
+<form method="get" asp-action="Index" class="row mb-4">
+    <div class="col-md-4">
+        <input type="text" name="searchString" class="form-control" placeholder="Search by company..." value="@Context.Request.Query["searchString"]" />
+    </div>
+
+    <div class="col-md-4">
+        <select name="statusFilter" class="form-control">
+            <option value="">All Statuses</option>
+            @foreach (var status in ViewBag.Statuses as SelectList)
+            {
+                var selected = Context.Request.Query["statusFilter"] == status.Text ? "selected" : "";
+                <option value="@status.Text" selected="@selected">@status.Text</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+    <div class="col-md-2">
+        <a asp-action="Index" class="btn btn-secondary w-100">Reset</a>
+    </div>
+</form>
+
+<p>
+    <a class="btn btn-success" asp-action="Create">Create New Application</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Company</th>
+            <th>Position</th>
+            <th>Status</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@(Context.Request.Query["sortOrder"] == "Date" ? "date_desc" : "Date")">
+                    Date Applied
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Internship?.Company</td>
+                <td>@item.Internship?.Position</td>
+                <td>
+                    <select onchange="updateStatus(@item.ApplicationId, this.value)" class="form-select form-select-sm">
+                        @foreach (var status in ViewBag.AllStatuses as List<Internship_Tracker.Models.Status>)
+                        {
+                            var selected = status.StatusId == item.StatusId ? "selected" : "";
+                            <option value="@status.StatusId" selected="@selected">@status.Name</option>
+                        }
+                    </select>
+                </td>
+                <td>@item.DateApplied.ToShortDateString()</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ApplicationId" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.ApplicationId" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        function updateStatus(applicationId, statusId) {
+            fetch(`/api/ApplicationsApi/${applicationId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(parseInt(statusId))
+            })
+                .then(res => {
+                    if (res.ok) {
+                        console.log("Status updated!");
+                    } else {
+                        alert("Failed to update status.");
+                    }
+                });
+        }
+    </script>
+}

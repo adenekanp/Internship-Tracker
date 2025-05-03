@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center mt-5">
+    @if (User.Identity?.IsAuthenticated ?? false)
+    {
+        <h1 class="display-4">Welcome back, @User.Identity.Name!</h1>
+        <p class="lead">Manage your internships and job applications with ease.</p>
+
+        <div class="mt-4">
+            <a class="btn btn-primary me-2" asp-controller="Internships" asp-action="Index">View Internships</a>
+            <a class="btn btn-success" asp-controller="Applications" asp-action="Index">Track Applications</a>
+        </div>
+
+        <p class="mt-4 text-muted">Let’s help you stay organized and land your dream role!</p>
+    }
+    else
+    {
+        <h1 class="display-4">Welcome to Internship Tracker!</h1>
+        <p class="lead">Your personal tool for staying on top of Internship deadlines and Job applications.</p>
+        <div class="mt-4">
+            <a class="btn btn-outline-primary me-2" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            <a class="btn btn-outline-secondary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+
+        </div>
+        <p class="mt-4 text-muted">Start your journey by Creating an Account or Logging in.</p>
+    }
+</div>

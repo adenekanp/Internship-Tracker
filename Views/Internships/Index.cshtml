@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Internship_Tracker.Models.Internship>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Internships</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Company)</th>
+            <th>@Html.DisplayNameFor(model => model.Position)</th>
+            <th>@Html.DisplayNameFor(model => model.ApplicationDeadline)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="4" class="text-center">
+                    No internships found. Click <a asp-action="Create">here</a> to add one!
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Company</td>
+                    <td>@item.Position</td>
+                    <td>@item.ApplicationDeadline.ToShortDateString()</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.InternshipId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.InternshipId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.InternshipId">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
